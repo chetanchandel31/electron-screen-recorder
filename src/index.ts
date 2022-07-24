@@ -1,6 +1,10 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
+// need `remote` to access things on main process from render process
+import * as remoteMain from "@electron/remote/main";
+remoteMain.initialize();
+
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   // eslint-disable-line global-require
@@ -14,6 +18,8 @@ const createWindow = (): void => {
     width: 800,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true, // access nodejs globals directly in frontend code
+      contextIsolation: false, // we get ""`require` is not defined" error w/o this
     },
   });
 
@@ -22,6 +28,9 @@ const createWindow = (): void => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  // need `remote` to access things on main process from render process
+  remoteMain.enable(mainWindow.webContents);
 };
 
 // This method will be called when Electron has finished
