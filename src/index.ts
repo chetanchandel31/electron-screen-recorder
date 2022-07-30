@@ -14,6 +14,8 @@ if (require("electron-squirrel-startup")) {
 const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: "Screen recorder",
+    icon: path.join(__dirname, "/icon.ico"),
     height: 600,
     width: 800,
     webPreferences: {
@@ -27,7 +29,7 @@ const createWindow = (): void => {
   mainWindow.loadFile(path.join(__dirname, "../src/index.html"));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // need `remote` to access things on main process from render process
   remoteMain.enable(mainWindow.webContents);

@@ -28,10 +28,11 @@ async function getVideoSources() {
 }
 
 let mediaRecorder: MediaRecorder;
-const recordedChunks: BlobPart[] = []; // record video in multiple segments(???)
+let recordedChunks: BlobPart[] = []; // record video in multiple segments(???)
 
 startBtn.onclick = () => {
   if (!mediaRecorder) return alert("please sleect a video source first");
+  if (mediaRecorder.state === "recording") return;
 
   mediaRecorder.start();
   startBtn.classList.add("is-danger");
@@ -73,7 +74,7 @@ async function selectSource(source: Electron.DesktopCapturerSource) {
   videoElement.play();
 
   // so far we have a stream of video from user's system that can be displayed in `video` element
-  // how to record and save it in user's system
+  // now need to record and save it in user's system
 
   const options: MediaRecorderOptions = { mimeType: "video/webm; codecs=vp9" }; // https://stackoverflow.com/questions/3828352/what-is-a-mime-type
   // A MIME type is a label used to identify a type of data. It serves the same purpose on the Internet that file extensions do on Microsoft Windows.
@@ -105,4 +106,12 @@ async function handleStop() {
 
   // write the file to the save location we just got
   writeFile(filePath, buffer, () => console.log("video saved 🎉")); // TODO: try native notification?
+
+  // reset media recorder's state
+  mediaRecorder = undefined;
+  recordedChunks = [];
+
+  // reset video element's state
+  videoElement.pause();
+  videoElement.srcObject = null;
 }
