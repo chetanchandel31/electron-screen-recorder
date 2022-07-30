@@ -34,6 +34,9 @@ startBtn.onclick = () => {
   if (!mediaRecorder) return alert("please sleect a video source first");
   if (mediaRecorder.state === "recording") return;
 
+  stopBtn.disabled = false;
+  startBtn.disabled = true;
+
   mediaRecorder.start();
   startBtn.classList.add("is-danger");
   startBtn.innerText = "Recording";
@@ -41,6 +44,11 @@ startBtn.onclick = () => {
 
 stopBtn.onclick = () => {
   if (!mediaRecorder || mediaRecorder.state !== "recording") return;
+
+  stopBtn.disabled = true;
+  startBtn.disabled = false;
+  videoSelectBtn.innerText = "Choose a video source";
+
   mediaRecorder.stop();
   startBtn.classList.remove("is-danger");
   startBtn.innerText = "Start";
@@ -106,7 +114,8 @@ async function handleStop() {
   });
 
   // write the file to the save location we just got
-  writeFile(filePath, buffer, () => console.log("video saved 🎉")); // TODO: try native notification?
+  // there won't be a `filePath` if user clicks `cancel` instead of `save`
+  if (filePath) writeFile(filePath, buffer, () => alert("video saved 🎉")); // TODO: try native notification?
 
   // reset media recorder's state
   mediaRecorder = undefined;
