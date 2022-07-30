@@ -29,7 +29,7 @@ const createWindow = (): void => {
   mainWindow.loadFile(path.join(__dirname, "../src/index.html"));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
   // need `remote` to access things on main process from render process
   remoteMain.enable(mainWindow.webContents);
