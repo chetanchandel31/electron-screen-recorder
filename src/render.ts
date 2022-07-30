@@ -40,6 +40,7 @@ startBtn.onclick = () => {
 };
 
 stopBtn.onclick = () => {
+  if (!mediaRecorder || mediaRecorder.state !== "recording") return;
   mediaRecorder.stop();
   startBtn.classList.remove("is-danger");
   startBtn.innerText = "Start";
